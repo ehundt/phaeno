@@ -1,0 +1,73 @@
+---
+season_data:
+  zip_filenames:
+    wild:    "Sofortmelder_Wildwachsende_Pflanze.zip"
+    culture: "Sofortmelder_Landwirtschaft_Kulturpflanze.zip"
+    fruits:  "Sofortmelder_Obst.zip"
+  phases:
+    filename: "Beschreibung_Phase.txt"
+    column_names:
+      - "Phasen_id"
+      - "Phasenbezeichnung"
+  stations:
+    filename: "Beschreibung_Stationen.txt"
+    column_names:
+      - "Stations_id"
+      - "Stationsname"
+      - "geograph.Breite"
+      - "geograph.Laenge"
+      - "Stationshoehe"
+      - "Naturraumgruppe"
+      - "Naturraum"
+      - "Datum Stationsaufloesung"
+      - "Bundesland"
+  dates:
+    column_names:
+      - "Qualitaetsniveau"
+      - "Stations_id"
+      - "Referenzjahr"
+      - "Objekt_id=Pflanze"
+      - "Phase_id=Phase"
+      - "Eintrittsdatum"
+      - "Eintrittsdatum_QB"
+      - "Jultag"
+seasons:
+  - Vorfrühling:
+    - Haselnuss: "Blüte Beginn"
+    - Schneeglöckchen: "Blüte Beginn"
+  - Erstfrühling:
+    - Forsythie:
+        phase: "Blüte Beginn"
+        file:  "PH_Sofortmelder_Wildwachsende_Pflanze_Forsythie.txt"
+    - Stachelbeere:
+        phase: "Blattentfaltung Beginn"
+        file:  "PH_Sofortmelder_Obst_Stachelbeere.txt"
+  - Vollfrühling:
+    - Apfel:
+        phase: "Blüte Beginn"
+        file:  "PH_Sofortmelder_Obst_Apfel.txt"
+    - Stiel_Eiche: "Blattentfaltung Beginn"
+  - Frühsommer:
+    - Schwarzer_Holunder: "Blüte Beginn"
+    - Robinie: "Blüte Beginn"
+  - Hochsommer:
+    - Sommer_Linde: "Blüte Beginn"
+    - Johannisbeere:
+        phase: "erste reife Früchte"
+        file:  "PH_Sofortmelder_Obst_Johannisbeere_alle_Sorten.txt"
+  - Spätsommer:
+    - Frühapfel: "erste reife Früchte"
+    - Eberesche: "erste reife Früchte"
+  - Frühherbst:
+    - Schwarzer_Holunder: "erste reife Früchte"
+    - Kornelkirsche: "erste reife Früchte"
+  - Vollherbst:
+    - Rosskastanie: "erste reife Früchte"
+    - Stiel_Eiche: "erste reife Früchte"
+  - Spätherbst:
+    - Stiel_Eiche: "herbstliche Blattverfärbung"
+    - Eberesche: "herbstlicher Blattfall"
+  - Winter:
+    - Stiel_Eiche: "herbstlicher Blattfall"
+    - Apfel_spätreifend: "herbstlicher Blattfall"
+    - Europäische_Lärche: Nadelfall
