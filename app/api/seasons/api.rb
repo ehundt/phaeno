@@ -8,8 +8,8 @@ module Seasons
      params do
        requires :geolocation, type: String, desc: 'Geolocation'
      end
-      desc 'Gives me the average phaenological season in Germany'
-      get :germany do
+      desc 'Gives me the phaenological season at the given geolocation today'
+      get :current do
         response = { bla: "got geolocation #{params[:geolocation]}" }
         response.to_json
       end

@@ -1,16 +1,16 @@
 ---
 season_data:
   zip_filenames:
-    wild:    "Sofortmelder_Wildwachsende_Pflanze.zip"
-    culture: "Sofortmelder_Landwirtschaft_Kulturpflanze.zip"
-    fruits:  "Sofortmelder_Obst.zip"
+    wild:    "Sofortmelder_Wildwachsende_Pflanze"
+    culture: "Sofortmelder_Landwirtschaft_Kulturpflanze"
+    fruits:  "Sofortmelder_Obst"
   phases:
     filename: "Beschreibung_Phase.txt"
     column_names:
       - "Phasen_id"
       - "Phasenbezeichnung"
   stations:
-    filename: "Beschreibung_Stationen.txt"
+    filename: "PH_Beschreibung_Phaenologie_Stationen.txt"
     column_names:
       - "Stations_id"
       - "Stationsname"
