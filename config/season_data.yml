@@ -1,73 +1,105 @@
 ---
 season_data:
-  zip_filenames:
-    wild:    "Sofortmelder_Wildwachsende_Pflanze"
-    culture: "Sofortmelder_Landwirtschaft_Kulturpflanze"
-    fruits:  "Sofortmelder_Obst"
-  phases:
-    filename: "Beschreibung_Phase.txt"
-    column_names:
-      - "Phasen_id"
-      - "Phasenbezeichnung"
-  stations:
-    filename: "PH_Beschreibung_Phaenologie_Stationen.txt"
-    column_names:
-      - "Stations_id"
-      - "Stationsname"
-      - "geograph.Breite"
-      - "geograph.Laenge"
-      - "Stationshoehe"
-      - "Naturraumgruppe"
-      - "Naturraum"
-      - "Datum Stationsaufloesung"
-      - "Bundesland"
-  dates:
-    column_names:
-      - "Qualitaetsniveau"
-      - "Stations_id"
-      - "Referenzjahr"
-      - "Objekt_id=Pflanze"
-      - "Phase_id=Phase"
-      - "Eintrittsdatum"
-      - "Eintrittsdatum_QB"
-      - "Jultag"
+  wild:
+    zip_filename:      "Sofortmelder_Wildwachsende_Pflanze.zip"
+    phases_filename:   "PH_Beschreibung_Phase.txt"
+    stations_filename: "PH_Beschreibung_Phaenologie_Stationen.txt"
+    plants_filename:   "PH_Beschreibung_Pflanze_Wildwachsende_Pflanze.txt"
+    season_data_filenames:
+      - "PH_Sofortmelder_Wildwachsende_Pflanze_Schneegloeckchen_akt.txt"
+      - "PH_Sofortmelder_Wildwachsende_Pflanze_Forsythie.txt"
+  culture:
+    zip_filename:      "Sofortmelder_Landwirtschaft_Kulturpflanze.zip"
+    phases_filename:   "PH_Beschreibung_Phase.txt"
+    stations_filename: "PH_Beschreibung_Phaenologie_Stationen.txt"
+    plants_filename:   "PH_Beschreibung_Pflanze_Landwirtschaft_Kulturpflanze.txt"
+    season_data_filenames:
+      - "PH_Sofortmelder_Wildwachsende_Pflanze_Schneegloeckchen_akt.txt"
+  fruits:
+    zip_filename:      "Sofortmelder_Obst.zip"
+    phases_filename:   "PH_Beschreibung_Phase.txt"
+    stations_filename: "PH_Beschreibung_Phaenologie_Stationen.txt"
+    plants_filename:   "PH_Beschreibung_Pflanze_Obst.txt"
+    season_data_filenames:
+      - "PH_Sofortmelder_Wildwachsende_Pflanze_Schneegloeckchen_akt.txt"
+
+dates:
+  column_names:
+    - "Qualitaetsniveau"
+    - "Stations_id"
+    - "Referenzjahr"
+    - "Objekt_id=Pflanze"
+    - "Phase_id=Phase"
+    - "Eintrittsdatum"
+    - "Eintrittsdatum_QB"
+    - "Jultag"
+
+
 seasons:
-  - Vorfrühling:
-    - Haselnuss: "Blüte Beginn"
-    - Schneeglöckchen: "Blüte Beginn"
-  - Erstfrühling:
-    - Forsythie:
-        phase: "Blüte Beginn"
-        file:  "PH_Sofortmelder_Wildwachsende_Pflanze_Forsythie.txt"
-    - Stachelbeere:
-        phase: "Blattentfaltung Beginn"
-        file:  "PH_Sofortmelder_Obst_Stachelbeere.txt"
-  - Vollfrühling:
-    - Apfel:
-        phase: "Blüte Beginn"
-        file:  "PH_Sofortmelder_Obst_Apfel.txt"
-    - Stiel_Eiche: "Blattentfaltung Beginn"
-  - Frühsommer:
-    - Schwarzer_Holunder: "Blüte Beginn"
-    - Robinie: "Blüte Beginn"
-  - Hochsommer:
-    - Sommer_Linde: "Blüte Beginn"
-    - Johannisbeere:
-        phase: "erste reife Früchte"
-        file:  "PH_Sofortmelder_Obst_Johannisbeere_alle_Sorten.txt"
-  - Spätsommer:
-    - Frühapfel: "erste reife Früchte"
-    - Eberesche: "erste reife Früchte"
-  - Frühherbst:
-    - Schwarzer_Holunder: "erste reife Früchte"
-    - Kornelkirsche: "erste reife Früchte"
-  - Vollherbst:
-    - Rosskastanie: "erste reife Früchte"
-    - Stiel_Eiche: "erste reife Früchte"
-  - Spätherbst:
-    - Stiel_Eiche: "herbstliche Blattverfärbung"
-    - Eberesche: "herbstlicher Blattfall"
-  - Winter:
-    - Stiel_Eiche: "herbstlicher Blattfall"
-    - Apfel_spätreifend: "herbstlicher Blattfall"
-    - Europäische_Lärche: Nadelfall
+  Vorfrühling:
+    - name: "Hasel"
+      phase: "Blüte Beginn"
+    - name: "Schneeglöckchen"
+      phase: "Blüte Beginn"
+      type: "wild"
+      file: "PH_Sofortmelder_Wildwachsende_Pflanze_Schneegloeckchen_akt.txt"
+  Erstfrühling:
+    - name: "Forsythie"
+      phase: "Blüte Beginn"
+      type:  "wild"
+      file:  "PH_Sofortmelder_Wildwachsende_Pflanze_Forsythie.txt"
+    - name: "Stachelbeere"
+      phase: "Blattentfaltung Beginn"
+      file:  "PH_Sofortmelder_Obst_Stachelbeere.txt"
+  Vollfrühling:
+    - name: "Apfel"
+      phase: "Blüte Beginn"
+      file:  "PH_Sofortmelder_Obst_Apfel.txt"
+    - name: "Stiel-Eiche"
+      phase: "Blattentfaltung Beginn"
+      type:  "wild"
+      file:  "PH_Sofortmelder_Wildwachsende_Pflanze_Stiel-Eiche_akt.txt"
+  Frühsommer:
+    - name: "Schwarzer Holunder"
+      phase: "Blüte Beginn"
+      type:  "wild"
+      file:  "PH_Sofortmelder_Wildwachsende_Pflanze_Schwarzer_Holunder_akt.txt"
+    - name: "Robinie"
+      phase: "Blüte Beginn"
+  Hochsommer:
+    - name: "Sommer-Linde"
+      phase: "Blüte Beginn"
+      type:  "wild"
+      file:  "PH_Sofortmelder_Wildwachsende_Pflanze_Sommer-Linde_akt.txt"
+    - name: "Johannisbeere, alle Sorten"
+      phase: "erste reife Früchte"
+      file:  "PH_Sofortmelder_Obst_Johannisbeere_alle_Sorten.txt"
+  Spätsommer:
+    - name: "Apfel, frühe Reife"
+      phase: "erste reife Früchte"
+    - name: "Eberesche"
+      phase: "erste reife Früchte"
+      type:  "wild"
+      file:  "PH_Sofortmelder_Wildwachsende_Pflanze_Esche_akt.txt"
+  Frühherbst:
+    - name: "Schwarzer Holunder"
+      phase: "erste reife Früchte"
+    - name: "Kornelkirsche"
+      phase: "erste reife Früchte"
+  Vollherbst:
+    - name: "Rosskastanie"
+      phase: "erste reife Früchte"
+    - name: "Stiel-Eiche"
+      phase: "erste reife Früchte"
+  Spätherbst:
+    - name: "Stiel-Eiche"
+      phase: "herbstliche Blattverfärbung"
+    - name: "Eberesche"
+      phase: "herbstlicher Blattfall"
+  Winter:
+    - name: "Stiel-Eiche"
+      phase: "herbstlicher Blattfall"
+    - name: "Apfel, späte Reife"
+      phase: "herbstlicher Blattfall"
+    - name: "Europäische Lärche"
+      phase: "herbstlicher Nadelfall"

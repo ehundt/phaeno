@@ -1,4 +1,4 @@
-class PhaenologicalSeasons < ActiveRecord::Base
+class PhaenologicalSeason < ActiveRecord::Base
 
   has_one :station
 end

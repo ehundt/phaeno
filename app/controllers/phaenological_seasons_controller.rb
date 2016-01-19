@@ -1,0 +1,2 @@
+class PhaenologicalSeasonsController < ApplicationController
+end
