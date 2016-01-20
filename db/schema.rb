@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160118114946) do
+ActiveRecord::Schema.define(version: 20160120082939) do
 
   create_table "phaenological_seasons", force: :cascade do |t|
     t.integer  "station_id", null: false
@@ -26,7 +26,7 @@ ActiveRecord::Schema.define(version: 20160118114946) do
   add_index "phaenological_seasons", ["season_id"], name: "index_phaenological_seasons_on_season_id"
 
   create_table "phases", force: :cascade do |t|
-    t.integer  "phase_id"
+    t.integer  "dwd_phase_id"
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -58,7 +58,7 @@ ActiveRecord::Schema.define(version: 20160118114946) do
   end
 
   create_table "stations", force: :cascade do |t|
-    t.integer  "stations_id", null: false
+    t.integer  "dwd_station_id", null: false
     t.string   "name"
     t.float    "latitude"
     t.float    "longitude"

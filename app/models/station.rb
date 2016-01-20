@@ -11,4 +11,6 @@ class Station < ActiveRecord::Base
   # Datum Stationsaufloesung -
   # Bundesland        -
 
+  def self.closest(geolocation)
+  end
 end

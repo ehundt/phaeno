@@ -6,11 +6,18 @@ module Seasons
 
     resource :seasons do
      params do
-       requires :geolocation, type: String, desc: 'Geolocation'
+       requires :latitude, type: String, desc: 'latitude'
+       requires :longitude, type: String, desc: 'longitude'
+
      end
       desc 'Gives me the phaenological season at the given geolocation today'
       get :current do
-        response = { bla: "got geolocation #{params[:geolocation]}" }
+        geolocation = { latitude: params[:latitude],
+                        longitude: params[:longitude] }
+        ph_season = PhaenologicalSeason.current_season(geolocation)
+
+        response = { season: "Vollfrühling",
+                     description: "got geolocation #{params[:latitude]}" }
         response.to_json
       end
     end

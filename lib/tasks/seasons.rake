@@ -1,17 +1,27 @@
-namespace :seasons do
+namespace :dwd do
 
   require 'net/ftp'
   require 'zip'
   require 'csv'
+  require 'fileutils'
 
-  TEMP_DIR = "/tmp/dwd"
+  temp_dir = "/tmp/dwd"
+
+  desc "Retrieve and import newest season data"
+  task :update_season_data => :environment do
+    # if it should be invoked even if it has already been then use:
+    # Rake::Task["retrieve_data"].reenable
+    Rake::Task["retrieve_data"].invoke
+    Rake::Task["extract_latest_data"].invoke
+    Rake::Task["data:import"].invoke
+  end
 
   desc "Retrieve phaenological data from Deutscher Wetterdienst via ftp"
   task :retrieve_data => :environment do
 
-    unless File.exists?(TEMP_DIR)
-      Dir.mkdir(TEMP_DIR)
-      puts "Creating new directory: #{TEMP_DIR}"
+    unless File.exists?(temp_dir)
+      Dir.mkdir(temp_dir)
+      puts "Creating new directory: #{temp_dir}"
     end
 
     filenames = [ "Sofortmelder_Landwirtschaft_Kulturpflanze",
@@ -28,30 +38,32 @@ namespace :seasons do
 
     filenames.each do |filename|
       ftp.getbinaryfile(filename + "_akt.zip",
-                      TEMP_DIR + "/" + filename + ".zip", 1024)
+                      temp_dir + "/" + filename + ".zip", 1024)
     end
     ftp.quit()
   end
 
   desc "Extract downloaded ftp season data"
-  task :extract_latest_data => :environment do
+  task :extract_data => :retrieve_data do
     config = YAML.load_file("#{Rails.root.to_s}/config/season_data.yml")
 
     zip_filenames = {}
     ["culture", "wild", "fruits"].each do |type|
-      zip_filenames[type] = "#{TEMP_DIR}/" + config["season_data"][type]["zip_filename"]
+      zip_filenames[type] = "#{temp_dir}/" + config["season_data"][type]["zip_filename"]
     end
 
     zip_filenames.each do |type, zip|
 
-      dest_dir = "dwd/#{type}"
-      unless File.exists?(dest_dir)
+      dest_dir = "#{temp_dir}/#{type}"
+      if File.exists?(dest_dir)
+        FileUtils.rm_rf("#{dest_dir}/.", secure: true)
+      else
         Dir.mkdir(dest_dir)
         puts "Creating new directory: #{dest_dir}"
       end
 
       Zip::File.open(zip) do |zip_file|
-        puts "Importing phases #{zip_file.inspect}"
+        puts "Importing #{zip}"
 
         zip_file.each do |data|
           puts "Extractig #{data.name}"
@@ -65,67 +77,32 @@ namespace :seasons do
   end
 
   namespace :stations do
-    desc "Import stations data"
-    task :import => :environment do
-      import_data("stations")
-    end
-  end
+    desc "Import stations data from extracted csv file"
+    task :import => :extract_data do
 
-  namespace :season_indications do
-    desc "Import season indication data"
-    task :import => :environment do
       config = YAML.load_file("#{Rails.root.to_s}/config/season_data.yml")
+      filename = "#{temp_dir}/wild/" + config["season_data"]["wild"]["stations_filename"]
 
-      config["seasons"].each do |season, indicators|
-        indicators.each do |indicator|
-          plant = Plant.where(name: indicator["name"]).first
-          phase = Phase.where(name: indicator["phase"]).first
-          season_obj = Season.where(name: season).first
-          params = { plant_id:  plant.id,
-                     phase_id:  phase.id,
-                     season_id: season_obj.id }
-
-          if plant && phase && season_obj
-            season_indication = SeasonIndication.where(params).first
-            unless season_indication
-              success = SeasonIndication.create(params)
-              puts "#{season} with #{plant.name} created."
-            else
-              season_indication.update(params)
-              puts "#{season} with #{plant.name} updated."
-            end
-          else
-            puts "#{season}: #{plant.name} could not be imported:"
-            puts "plant = #{plant.inspect}"
-            puts "phase = #{phase.inspect}"
-            puts "season_obj = #{season_obj.inspect}"
-            puts
-          end
-        end
-        puts
+      if import_csv(filename, "stations")
+        puts "Import of stations (wild) done.\n"
+      else
+        puts "Import of stations (wild) failed!\n"
       end
     end
   end
 
-  namespace :data do
-    desc "Import season data from already extracted files"
-    task :import => :environment do |t|
-
-    end
-  end
-
-  desc "Import data from extracted zip files from dwd"
+  desc "Import stations, plants or phases from extracted zip files from dwd"
   task :import, [:what] => [:environment] do |t, args|
     case args[:what]
     when "stations"
       import_data("stations")
     when "phases"
       import_data("phases")
-    when "season_data"
+    when "plants"
       ["wild", "fruits", "culture"].each do |type|
         import_data(args[:what], type)
       end
-    when "plants"
+    when "season_data"
       ["wild", "fruits", "culture"].each do |type|
         import_data(args[:what], type)
       end
@@ -136,21 +113,26 @@ private
   def import_data(what, type="wild")
     puts "Importing #{what} data (type = #{type}): "
     config = YAML.load_file("#{Rails.root.to_s}/config/season_data.yml")
-    # qualitätsniveau: nicht 0 (testdaten), nicht 13, nicht 14
 
     if what == "season_data"
-      # filenames = "dwd/" + config["season_data"][type]["season_data_filenames"]
-      config["season_data"][type]["season_data_filenames"].each do |filename|
-        if import_csv("dwd/#{type}/" + filename, what)
-          puts "\nImport of #{what} (#{type}) done."
-        else
-          puts "\nImport of #{what} (#{type}) failed!"
+      temp_dir = "/tmp/dwd"
+      files = Dir["#{temp_dir}/#{type}/*"]
+
+      #files = config["season_data"][type]["season_data_filenames"]
+
+      files.each do |filename|
+        if /Sofortmelder/ =~ filename && /Beschreibung/ !~ filename
+          if import_csv(filename, what)
+            puts "\nImport of #{what} (#{type}) done."
+          else
+            puts "\nImport of #{what} (#{type}) failed!"
+          end
         end
       end
     else
       # so far the files for stations and for phases are the same for all
       # types
-      filename = "dwd/#{type}/" + config["season_data"][type]["#{what}_filename"]
+      filename = "#{temp_dir}/#{type}/" + config["season_data"][type]["#{what}_filename"]
       if import_csv(filename, what)
         puts "Import of #{what} (#{type}) done.\n"
       else
@@ -176,13 +158,13 @@ private
 
             case what
             when "stations"
-              store_stations_data(orig_data)
+              Import::Station.import(orig_data)
             when "phases"
-              store_phase_data(orig_data)
+              Import::Phase.import(orig_data)
             when "season_data"
-              store_season_data(orig_data)
+              Import::PhaenologicalSeason.import(orig_data)
             when "plants"
-              store_plants_data(orig_data)
+              Import::Plant.import(orig_data)
             end
 
           end
@@ -201,54 +183,4 @@ private
     end
     return true
   end
-
-  def store_plants_data(orig_data)
-    data = {}
-    data["dwd_object_id"] = orig_data["pflanzengruppe,-objekt"]
-    data["name"] = orig_data["bezeichnung"]
-
-    if data["name"]
-      plant = Plant.where(dwd_object_id: data["dwd_object_id"]).first_or_create(data)
-      print plant.name + ", "
-    end
-  end
-
-  def store_stations_data(orig_data)
-    data = {}
-    data["stations_id"] = orig_data["stations_id"]
-    data["latitude"]    = orig_data["geograph.breite"]
-    data["longitude"]   = orig_data["geograph.laenge"]
-    data["name"]        = orig_data["stationsname"]
-
-    if (data["stations_id"].to_i > 0)
-      station = Station.where(stations_id: data["stations_id"]).first_or_create(data)
-      print "#{station.id}, "
-    end
-  end
-
-  def store_phase_data(orig_data)
-    data = {}
-    data["phase_id"] = orig_data["phasen_id"]
-    data["name"]     = orig_data["phasenbezeichnung"]
-
-    if (data["phase_id"].to_i > 0)
-      phase = Phase.where(phase_id: data["phase_id"]).first_or_create(data)
-      print "#{phase.name}, "
-    end
-  end
-
-  def store_season_data(data)
-    puts data.inspect
-      params = {}
-      params["station_id"] = data["stations_id"].to_i
-      params["phase_id"]   = data["phase_id"].to_i
-      params["plant_id"]   = data["plant_id"].to_i
-      params["date"]       = data["eintrittsdatum"]
-      season = PhaenologicalSeason.new(params)
-      puts season.inspect
-  end
 end
-        # TODO: only indicators needed for next seasons
-        # get filenames from indicators
-#        puts "Forsythie"
- #       import_season_data(zip_file.glob('PH_Sofortmelder_Wildwachsende_Pflanze_Forsythie.txt').first)
