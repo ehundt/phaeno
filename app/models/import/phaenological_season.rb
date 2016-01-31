@@ -36,7 +36,7 @@ class Import::PhaenologicalSeason
       data["active"] = true
 
       if season_indication = ::SeasonIndication.where(plant_id: plant.id, phase_id: phase.id).first
-        data["season_id"] = season_indication.season_id
+        data["season"] = season_indication.season
       else
         puts "SeasonIndication #{plant.name}: #{plant.id}, #{phase.name}: #{phase.id} not found!"
         return

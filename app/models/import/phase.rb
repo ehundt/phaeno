@@ -6,7 +6,7 @@ class Import::Phase
     data["name"] = orig_data["phasenbezeichnung"]
 
     if (data["dwd_phase_id"].to_i > 0)
-      phase = Phase.where(dwd_phase_id: data["dwd_phase_id"]).first_or_create(data)
+      phase = ::Phase.where(dwd_phase_id: data["dwd_phase_id"]).first_or_create(data)
       print "#{phase.name}, "
     end
   end

@@ -113,19 +113,20 @@ private
   def import_data(what, type="wild")
     puts "Importing #{what} data (type = #{type}): "
     config = YAML.load_file("#{Rails.root.to_s}/config/season_data.yml")
+    temp_dir = "/tmp/dwd"
 
     if what == "season_data"
-      temp_dir = "/tmp/dwd"
       files = Dir["#{temp_dir}/#{type}/*"]
 
       #files = config["season_data"][type]["season_data_filenames"]
 
       files.each do |filename|
+        puts "Importing file #{filename}"
         if /Sofortmelder/ =~ filename && /Beschreibung/ !~ filename
           if import_csv(filename, what)
-            puts "\nImport of #{what} (#{type}) done."
+            puts "\nSUCCESS: Import of #{what} (#{type}) done."
           else
-            puts "\nImport of #{what} (#{type}) failed!"
+            puts "\nFAILURE: Import of #{what} (#{type}) failed!"
           end
         end
       end
@@ -134,9 +135,9 @@ private
       # types
       filename = "#{temp_dir}/#{type}/" + config["season_data"][type]["#{what}_filename"]
       if import_csv(filename, what)
-        puts "Import of #{what} (#{type}) done.\n"
+        puts "SUCCESS: Import of #{what} (#{type}) done.\n"
       else
-        puts "Import of #{what} (#{type}) failed!\n"
+        puts "FAILURE: Import of #{what} (#{type}) failed!\n"
       end
     end
   end

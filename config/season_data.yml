@@ -59,6 +59,8 @@ seasons:
       phase: "Blüte Beginn"
       type: "wild"
       file: "PH_Sofortmelder_Wildwachsende_Pflanze_Schneegloeckchen_akt.txt"
+    - name: "Erle"
+      phase: "Blüte Beginn"
   Erstfrühling:
     - name: "Forsythie"
       phase: "Blüte Beginn"

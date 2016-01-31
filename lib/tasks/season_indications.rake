@@ -14,12 +14,11 @@ namespace :dwd do
         indicators.each do |indicator|
           plant = Plant.where(name: indicator["name"]).first
           phase = Phase.where(name: indicator["phase"]).first
-          season_obj = Season.where(name: season).first
           params = { plant_id:  plant.id,
                      phase_id:  phase.id,
-                     season_id: season_obj.id }
+                     season:    season.downcase }
 
-          if plant && phase && season_obj
+          if plant && phase && season
             season_indication = SeasonIndication.where(params).first
             unless season_indication
               success = SeasonIndication.create(params)
@@ -32,7 +31,7 @@ namespace :dwd do
             puts "#{season}: #{plant.name} could not be imported:"
             puts "plant = #{plant.inspect}"
             puts "phase = #{phase.inspect}"
-            puts "season_obj = #{season_obj.inspect}"
+            puts "season = season"
             puts
           end
         end
