@@ -6,13 +6,15 @@ class PhaenologicalSeason < ActiveRecord::Base
                  :frühsommer, :hochsommer, :spätsommer,
                  :frühherbst, :vollherbst, :spätherbst, :winter ]
 
-  def self.current_season(geolocation)
-    #latitude = geolocation["latitude"]
-    #longitude = geolocation["longitude"]
-
+  def self.current(geolocation={})
     station = Station.closest(geolocation)
-    ph_season = self.where(station: 5).order_by(:start)
-    return ph_season.season
+
+    unless station
+      return nil
+    end
+
+    ph_season = self.where(station: station.id).order_by(:start)
+    return ph_season
   end
 end
 
