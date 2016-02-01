@@ -32,11 +32,14 @@ namespace :dwd do
     #filenames = [ "Sofortmelder_Landwirtschaft_Kulturpflanze" ]
 
     ftp = Net::FTP.new('ftp-outgoing2.dwd.de')
-    ftp.login(user = "gds14012", passwd = "BVxNFsJo")
+    success = ftp.login(user = "gds14012", passwd = "BVxNFsJo")
+
+    puts "ftp login: #{success}"
 
     ftp.chdir('gds/specials/climate/tables/germany')
 
     filenames.each do |filename|
+      puts "Trying to get the binary file #{filename} via ftp and storing it to #{temp_dir}..."
       ftp.getbinaryfile(filename + "_akt.zip",
                       temp_dir + "/" + filename + ".zip", 1024)
     end
