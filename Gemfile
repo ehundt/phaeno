@@ -14,6 +14,10 @@ gem 'coffee-rails', '~> 4.1.0'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 # gem 'therubyracer', platforms: :ruby
 
+# Use PostGreSQL as the database for Active Record
+gem 'pg'
+gem 'rails_12factor', group: :production
+
 gem 'rubyzip', '>= 1.0.0'
 
 # Use jquery as the JavaScript library
